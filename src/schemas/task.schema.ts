@@ -3,23 +3,24 @@ import { baseSchema } from "./base.schema";
 import { categorySchema } from "./category.schema";
 
 const taskSchema = baseSchema.extend({
-    title: z.string(),
-    content: z.string(),
+    title: z.string().min(3).max(255),
+    content: z.string().min(3).max(255),
     finished: z.boolean().default(false),
-    category: categorySchema.nullish()
+    category: categorySchema,
 })
 
-const createTaskSchema = taskSchema.pick({title: true, content: true}).extend({categoryId: z.bigint()
-}).nullish();
+const createTaskSchema = taskSchema.omit({id:true, finished: true, category: true}).extend({
+    categoryId: z.number().positive()
+});
 
 const updateTaskSchema = taskSchema.omit({id: true, category: true}).extend({
     finished: z.boolean().default(true),
-    categoryId: z.bigint()
+    categoryId: z.number().positive()
 })
 
 const returnTaskSchema = taskSchema.omit({category: true}).extend({
-    categoryId: z.bigint()
-})
+    categoryId: z.number().positive()
+});
 
 export { taskSchema, createTaskSchema, updateTaskSchema, returnTaskSchema};
 

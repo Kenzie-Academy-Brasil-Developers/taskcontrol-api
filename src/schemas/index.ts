@@ -1,3 +1,23 @@
 import { baseSchema } from "./base.schema";
 
-export { baseSchema };
+import {
+    categorySchema,
+    createCategorySchema
+} from "./category.schema";
+
+import {
+    taskSchema,
+    createTaskSchema,
+    updateTaskSchema,
+    returnTaskSchema
+} from "./task.schema";
+
+export {
+    baseSchema,
+    categorySchema,
+    createCategorySchema,
+    taskSchema,
+    createTaskSchema,
+    updateTaskSchema,
+    returnTaskSchema
+};
