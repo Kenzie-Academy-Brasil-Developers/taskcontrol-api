@@ -6,7 +6,7 @@ export class TaskService {
 
     public create = async (payload: createTask): Promise<returnTask> => {
 
-        const newTask = await prisma.task.create({category, ...payload});
+        const newTask = await prisma.task.create({data: payload});
 
         return returnTaskSchema.parse(newTask);
     }
