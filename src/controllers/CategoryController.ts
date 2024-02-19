@@ -12,7 +12,9 @@ export class CategoryController {
         return res.status(201).json(newCategory);
     }
 
-    public delete = async ({ params: { categoryId }}: Request, res: Response): Promise<Response> => {
+    public delete = async (req: Request, res: Response): Promise<Response> => {
+
+        const categoryId = req.params;
 
         await this.categoryService.deleteOne(Number(categoryId))
 

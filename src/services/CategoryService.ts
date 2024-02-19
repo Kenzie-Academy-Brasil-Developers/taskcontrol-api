@@ -1,3 +1,4 @@
+
 import { Public } from "@prisma/client/runtime/library";
 import { prisma } from "../database/prisma";
 import { createCategory, returnCategory } from "../interfaces";
@@ -7,9 +8,7 @@ export class CategoryService {
  
     public create = async (payload: createCategory): Promise<returnCategory> => {
 
-        const newCategory = await prisma.category.create({
-            data: payload
-        })
+        const newCategory = await prisma.category.create({data: payload})
 
         return returnCategorySchema.parse(newCategory);
     }

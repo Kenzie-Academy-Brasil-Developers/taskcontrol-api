@@ -22,6 +22,22 @@ class EnsureMiddleware {
 
         return next();
     }
+
+    public taskIdExists = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+
+        const { taskId } = req.params;
+
+        const foundTask = await prisma.task.findFirst({ where: { id: Number(taskId)}});
+
+        if(!foundTask) {
+            throw new AppError("Task not found!", 404)
+        }
+
+        res.locals = { ...res.locals, foundTask }
+
+        return next();
+
+    }
 };
 
 export const ensure = new EnsureMiddleware();

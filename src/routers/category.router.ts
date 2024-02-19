@@ -8,6 +8,5 @@ const controller = new CategoryController();
 
 categoryRouter.post("", controller.create);
 
-categoryRouter.use("/:genreId", ensure.categoryIdExists);
 
-categoryRouter.delete("/:categoryId", controller.delete);
+categoryRouter.delete("/:id", ensure.categoryIdExists, controller.delete);
