@@ -1,20 +1,20 @@
-import e, { Router } from "express";
+import { Router } from "express";
 import { TaskController } from "../controllers";
 import { ensure } from "../middlewares/ensure.middleware";
+import { taskCreateSchema, taskUpdateSchema } from "../schemas/task.schema";
+
 
 export const taskRouter = Router();
 
 const controller = new TaskController();
 
-taskRouter.post("", ensure.categoryIdExists, controller.create);
+taskRouter.post("/", ensure.validBody(taskCreateSchema), ensure.categoryIdExists, controller.create);
 
-taskRouter.get("", ensure.categoryIdExists, controller.read);
+taskRouter.get("/", controller.read);
 
-taskRouter.use("/:id", ensure.taskIdExists, ensure.categoryIdExists);
+taskRouter.get("/:id", ensure.taskIdExists, controller.retrieve);
 
-taskRouter.get("/:id", ensure.taskIdExists, controller.retrieve );
-
-taskRouter.patch("/:id", ensure.taskIdExists, ensure.categoryIdExists, controller.update);
+taskRouter.patch("/:id", ensure.taskIdExists, ensure.categoryIdExists, ensure.validBody(taskUpdateSchema), controller.update);
 
 taskRouter.delete("/:id", ensure.taskIdExists, controller.delete);
 

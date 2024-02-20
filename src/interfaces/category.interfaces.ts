@@ -1,9 +1,8 @@
 import { z } from "zod";
 import { categorySchema, createCategorySchema } from "../schemas";
-import { returnCategorySchema } from "../schemas/category.schema";
 
-type createCategory = z.infer<typeof createCategorySchema>
+type CreateCategory = z.infer<typeof createCategorySchema>;
 
-type returnCategory = z.infer<typeof returnCategorySchema>
+type ReturnCategory = z.infer<typeof categorySchema>;
 
-export { createCategory, returnCategory };
+export { CreateCategory, ReturnCategory };

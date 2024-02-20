@@ -1,52 +1,62 @@
 import { prisma } from "../database/prisma";
-import { createTask, returnTask, updateTask } from "../interfaces/task.interfaces";
-import { returnTaskSchema } from "../schemas";
+import { CreateTask, UpdateTask, Task, TaskWithCategory } from "../interfaces";
 
 export class TaskService {
 
-    public create = async (payload: createTask): Promise<returnTask> => {
+    public create = async (payload: CreateTask): Promise<Task> => {
 
-        const newTask = await prisma.task.create({data: payload});
+        const newTask = await prisma.task.create({
+            data: payload
+        });
 
-        return returnTaskSchema.parse(newTask);
+        return newTask;
     }
 
-    public read = async (search?: string): Promise<Array<returnTask>> => {
+    public read = async (search?: string): Promise<TaskWithCategory[] | null > => {
 
         if(search){
-            const task = await prisma.task.findFirst({where: {
-                category: { name: search}
-            }});
+            const foundTasks = await prisma.task.findMany({
+                where: {
+                    ...(search && {
+                        category: { name: search }
+                    })
+                },
+                include: {
+                    category: true
+                }
 
-            return returnTaskSchema.array().parse(task);
+            });
+            return foundTasks;   
         }
 
-        const allTasks = await prisma.task.findMany({ include: {category: true}})
-
-        return returnTaskSchema.array().parse(allTasks)
-
+        const tasks = await prisma.task.findMany({include: {category : true}});
+        // console.log(tasks);
+    
+        return tasks;
     }
 
-    public retrieve = async (taskId: number ): Promise<returnTask> => {
+    public retrieve = async (taskId: number): Promise<TaskWithCategory | null> => {
 
-        const foundTask = await prisma.task.findFirst({where: {id: taskId }})
+        const foundTask = await prisma.task.findFirst({ where: { id: taskId },
+        include: {
+            category: true
+        } });
 
-        return returnTaskSchema.parse(foundTask)
+        return foundTask;
     }
 
-    public update = async (taskId: number, data: updateTask): Promise<returnTask> => {
+    public update = async (taskId: number, data: UpdateTask): Promise<Task> => {
 
-        const updateTask = await prisma.task.update({where: {id: taskId}, data});
+        const updateTask = await prisma.task.update({ where: { id: taskId },
+             data });
 
-        return returnTaskSchema.parse(updateTask)
+        return updateTask;
     }
 
     public delete = async (taskId: number) => {
 
-        return await prisma.task.delete({where: {id: taskId }});
+      const deleteTask = await prisma.task.delete({ where: { id: taskId } });
+        
+        return deleteTask;
     }
-
-
-
-
-}
+};

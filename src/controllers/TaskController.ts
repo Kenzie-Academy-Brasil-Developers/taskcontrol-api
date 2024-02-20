@@ -9,41 +9,45 @@ export class TaskController {
 
         const newTask = await this.taskService.create(req.body);
 
-        return res.status(201).json(newTask)
-    }
+        return res.status(201).json(newTask);
+    };
 
     public read = async (req: Request, res: Response): Promise<Response> => {
 
+        const { category } = req.query;
 
+        const allTasks = await this.taskService.read(category as string);
 
-        const allTasks = this.taskService.read(req.query.toLocaleString());
-
+        
+        console.log(allTasks);
         return res.status(200).json(allTasks);
-    }
+    };
 
     public retrieve = async (req: Request, res: Response): Promise<Response> => {
 
-        const taskId  = Number(req.params);
+        const taskId = Number(req.params.id);
 
-        const retrievedTask = this.taskService.retrieve(taskId);
+        const retrievedTask = await this.taskService.retrieve(taskId);
+
+        // console.log(retrievedTask);
 
         return res.status(200).json(retrievedTask);
-    }
+    };
 
-    public update = async (req: Request, res: Response ): Promise<Response> => {
+    public update = async (req: Request, res: Response): Promise<Response> => {
 
-        const updatedTask = this.taskService.update(Number(req.params), req.body)
+        const id = Number(req.params.id);
+        const body = req.body;
+        
+        const updatedTask = await this.taskService.update(id, body)
 
         return res.status(200).json(updatedTask);
-    }
+    };
 
     public delete = async (req: Request, res: Response): Promise<Response> => {
 
-        await this.taskService.delete(Number(req.params));
+        const deleteTask = await this.taskService.delete(Number(req.params.id));
 
-        return res.status(204).json();
-
-    }
-
-
+        return res.status(204).json(deleteTask);
+    };
 }

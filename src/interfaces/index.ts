@@ -1,5 +1,5 @@
-import { createTask, returnTask, updateTask, Task } from "./task.interfaces";
-import { createCategory, returnCategory } from "./category.interfaces";
+import { CreateTask, TaskWithCategory, UpdateTask, Task } from "./task.interfaces";
+import { CreateCategory, ReturnCategory } from "./category.interfaces";
 
 
-export { createTask, returnTask, updateTask, createCategory, returnCategory, Task}
+export { CreateTask, TaskWithCategory, UpdateTask, CreateCategory, ReturnCategory, Task};

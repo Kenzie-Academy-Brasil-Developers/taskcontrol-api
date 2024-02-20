@@ -1,23 +1,20 @@
 
-import { Public } from "@prisma/client/runtime/library";
 import { prisma } from "../database/prisma";
-import { createCategory, returnCategory } from "../interfaces";
-import { returnCategorySchema } from "../schemas/category.schema";
+import { CreateCategory } from "../interfaces";
 
 export class CategoryService {
- 
-    public create = async (payload: createCategory): Promise<returnCategory> => {
 
-        const newCategory = await prisma.category.create({data: payload})
+    public create = async (payload: CreateCategory) => {
 
-        return returnCategorySchema.parse(newCategory);
-    }
+        const newCategory = await prisma.category.create({ data: payload });
+
+        return newCategory;
+    };
 
     public deleteOne = async (categoryId: number) => {
 
-        return await prisma.category.delete({where: {id: categoryId}});
+        const deleteCategory = await prisma.category.delete({ where: { id: categoryId } });
 
-    } 
-
-    
+        return deleteCategory;
+    };
 }

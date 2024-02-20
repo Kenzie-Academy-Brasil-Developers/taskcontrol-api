@@ -9,10 +9,6 @@ export const app: Application = express();
 
 app.use(helmet());
 app.use(json());
-
-
-app.use("/api/tasks", taskRouter);
-app.use("/api/categories", categoryRouter);
-
-
+app.use("/tasks", taskRouter);
+app.use("/categories", categoryRouter);
 app.use(handleErrors);

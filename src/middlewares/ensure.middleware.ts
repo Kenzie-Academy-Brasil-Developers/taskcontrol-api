@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AnyZodObject } from "zod";
 import { prisma } from "../database/prisma";
-import { AppError } from "../errors";
 
 class EnsureMiddleware {
     public validBody = (schema: AnyZodObject) => (req: Request, _: Response, next: NextFunction): void => {
@@ -9,36 +8,57 @@ class EnsureMiddleware {
         return next();
     }
 
-    public categoryIdExists = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { categoryId } = req.params;
-        
-        const foundCategory = await prisma.category.findFirst({ where: { id: Number(categoryId)}});
+    public categoryIdExists = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            if (req.body.categoryId) {
+                const category = req.body.categoryId;
 
-        if(!foundCategory) {
-            throw new AppError("Category not found!", 404);
+                const searchCategory = await prisma.category.findFirst({
+                    where: {
+                        id: category
+                    }
+                });
+                if (!searchCategory) {
+                    return res.status(404).json({ message: 'Category not found' });
+                }
+            }
+            next();
+        } catch (error) {
+            return res.status(500).json(error)
+        };
+    };
+
+    public taskIdExists = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const params = Number(req.params.id);
+            const searchId = await prisma.task.findFirst({ where: { id: params } });
+
+            if (!searchId) {
+                return res.status(404).json({ message: 'Task not found' });
+            }
+
+            next();
+        } catch (error) {
+            return res.status(500).json(error);
         }
+    };
 
-        res.locals = { ...res.locals, foundCategory}
 
-        return next();
-    }
 
-    public taskIdExists = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    public category = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const params = Number(req.params.id);
+            const searchId = await prisma.category.findFirst({ where: { id: params } });
 
-        const { taskId } = req.params;
+            if (!searchId) {
+                return res.status(404).json({ message: 'Task not found' });
+            }
 
-        const foundTask = await prisma.task.findFirst({ where: { id: Number(taskId)}});
-
-        if(!foundTask) {
-            throw new AppError("Task not found!", 404)
+            next();
+        } catch (error) {
+            return res.status(500).json(error);
         }
-
-        res.locals = { ...res.locals, foundTask }
-
-        return next();
-
-    }
-};
-
+    };
+}
 export const ensure = new EnsureMiddleware();
 

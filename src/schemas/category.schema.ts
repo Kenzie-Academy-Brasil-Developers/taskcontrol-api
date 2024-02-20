@@ -1,13 +1,12 @@
 import {z} from "zod";
 
-import { baseSchema } from "./base.schema";
 
-const categorySchema = baseSchema.extend({
-    name: z.string().min(3).max(255)
+const categorySchema = z.object({
+    id: z.number().positive(),
+    name: z.string().min(1)
 })
 
 const createCategorySchema = categorySchema.omit({ id: true});
 
-const returnCategorySchema = categorySchema;
 
-export { categorySchema, createCategorySchema, returnCategorySchema}
+export { categorySchema, createCategorySchema};
