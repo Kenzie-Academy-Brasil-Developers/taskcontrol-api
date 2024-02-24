@@ -3,10 +3,13 @@ import { CreateTask, UpdateTask, Task, TaskWithCategory } from "../interfaces";
 
 export class TaskService {
 
-    public create = async (payload: CreateTask): Promise<Task> => {
+    public create = async ({userId, ...payload}: CreateTask): Promise<Task> => {
 
         const newTask = await prisma.task.create({
-            data: payload
+            data: {
+                ...payload,
+                userId: userId
+            } 
         });
 
         return newTask;
@@ -30,7 +33,6 @@ export class TaskService {
         }
 
         const tasks = await prisma.task.findMany({include: {category : true}});
-        // console.log(tasks);
     
         return tasks;
     }

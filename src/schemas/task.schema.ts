@@ -7,7 +7,8 @@ const taskSchema = z.object({
     title: z.string().min(1),
     content: z.string().min(1),
     finished: z.boolean().default(false),
-    categoryId: z.number().optional().nullish()
+    categoryId: z.number().optional().nullish(),
+    userId: z.number().positive()
 })
 
 const taskWithCategorySchema = taskSchema.extend({category: categorySchema.nullable().optional()});

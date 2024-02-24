@@ -12,6 +12,8 @@ import {
    
 } from "./task.schema";
 
+import { userSchema, userCreateSchema, userReturnSchema } from "./user.schema";
+
 export {
     taskWithCategorySchema,
     taskCreateSchema,
@@ -19,5 +21,7 @@ export {
     categorySchema,
     createCategorySchema,
     taskSchema,
-   
+    userSchema,
+    userCreateSchema,
+    userReturnSchema
 };

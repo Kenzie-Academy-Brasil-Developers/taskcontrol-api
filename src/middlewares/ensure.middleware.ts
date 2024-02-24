@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AnyZodObject } from "zod";
 import { prisma } from "../database/prisma";
+import { AppError } from "../errors";
 
 class EnsureMiddleware {
     public validBody = (schema: AnyZodObject) => (req: Request, _: Response, next: NextFunction): void => {
@@ -59,6 +60,23 @@ class EnsureMiddleware {
             return res.status(500).json(error);
         }
     };
+
+    public emailIsUnique = async (req: Request, res: Response, next: NextFunction) => {
+
+        const { email } = req.body;
+
+        if(!email) {
+            return next();
+        }
+
+        const foundUser = await prisma.user.findFirst({where: { email}});
+
+        if(foundUser){
+            throw new AppError("This email is already registered!", 409)
+        }
+
+        return next();
+    }
 }
 export const ensure = new EnsureMiddleware();
 
