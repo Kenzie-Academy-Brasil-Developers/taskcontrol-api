@@ -11,7 +11,7 @@ class HandleErrorMiddleware {
             }
 
             if(error instanceof ZodError) {
-                return res.status(400).json({message: error.errors})
+                return res.status(409).json({message: error.errors})
             }
 
             console.log(error);
