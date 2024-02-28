@@ -6,16 +6,16 @@ import { createSession, returnSession } from "../interfaces/session.interface";
 
 export class SessionService {
 
-    public login = async({name, email, password}: createSession): Promise<returnSession> => {
+    public login = async ({email, password }: createSession): Promise<returnSession> => {
 
-        const foundUser = await prisma.user.findFirst({where: {email}})
-    
-        if(!foundUser){
+        const foundUser = await prisma.user.findFirst({ where: { email } })
+
+        if (!foundUser) {
             throw new AppError("User not exists!", 404)
         }
 
         const passwordMatch = await compare(password, foundUser.password)
-        if(!passwordMatch){
+        if (!passwordMatch) {
             throw new AppError("Email and password doesn't match", 401)
 
         }
@@ -23,11 +23,22 @@ export class SessionService {
         const secret = process.env.SECRET_KEY!;
         const expiresIn = process.env.EXPIRES_IN!;
 
-        const token = sign({id: foundUser.id, }, secret, {
-            expiresIn,
-            subject: foundUser.email,
-        })
+ 
+        const accessToken: string = sign({}, secret, {
+            subject: foundUser.id.toString(),
+            expiresIn: expiresIn
+          });
 
-        return { token };
+        const authenticated = {
+            accessToken,
+            user: {
+                id: foundUser.id,
+                name: foundUser.name,
+                email: foundUser.email
+            }
+        }
+
+        return authenticated;
     }
 }
+

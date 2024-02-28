@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { sessionCreateSchema } from "../schemas";
+import { sessionCreateSchema, sessionReturnSchema } from "../schemas";
+
 
 type createSession = z.infer<typeof sessionCreateSchema>;
-type returnSession = {
-    token: string;
-};
+type returnSession = z.infer<typeof sessionReturnSchema>;
+
 
 export { createSession, returnSession};

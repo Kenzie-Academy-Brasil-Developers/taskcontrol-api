@@ -16,6 +16,13 @@ export class UserService {
         return userReturnSchema.parse(newUser);
     }
 
+    public retrieveUser = async (payload: number): Promise<TUserReturn> => {
+
+        const foundUser = await prisma.user.findFirst({where: {id: payload}})
+
+        return userReturnSchema.parse(foundUser);
+    }
+
     // public read = async(userId: number): Promise<Array<TUserReturn>> => {
 
     //     const getUser = await prisma.user.findFirst({where: {id: userId}});

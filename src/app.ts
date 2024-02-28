@@ -13,5 +13,6 @@ app.use(json());
 app.use("/tasks", taskRouter);
 app.use("/categories", categoryRouter);
 app.use("/users", userRouter);
-app.use("/users/login", sessionRouter);
+app.use("/user/login", sessionRouter);
+// app.use("/users/profile", userRouter);
 app.use(handleErrors);

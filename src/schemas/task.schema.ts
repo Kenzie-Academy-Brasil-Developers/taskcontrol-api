@@ -17,6 +17,8 @@ const taskCreateSchema = taskSchema.omit({id: true, finished: true});
 
 const taskUpdateSchema = taskSchema.omit({id: true}).partial();
 
+export const taskReturnSchema = taskSchema.partial();
+
 export { taskSchema, taskWithCategorySchema, taskCreateSchema, taskUpdateSchema};
 
 

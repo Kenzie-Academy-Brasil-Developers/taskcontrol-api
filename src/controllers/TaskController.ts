@@ -7,7 +7,9 @@ export class TaskController {
 
     public create = async (req: Request, res: Response): Promise<Response> => {
 
-        const newTask = await this.taskService.create(req.body);
+        const id = res.locals.sub;
+        console.log(id);
+        const newTask = await this.taskService.create(req.body, id);
 
         return res.status(201).json(newTask);
     };
@@ -29,7 +31,6 @@ export class TaskController {
 
         const retrievedTask = await this.taskService.retrieve(taskId);
 
-        // console.log(retrievedTask);
 
         return res.status(200).json(retrievedTask);
     };

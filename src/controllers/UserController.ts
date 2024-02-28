@@ -11,4 +11,13 @@ export class UserController {
 
         return res.status(201).json(newUser);
     }
+
+    public retrieveUser = async (req: Request, res: Response): Promise<Response> => {
+        const id = res.locals.decoded.id;
+
+        const foundUser = await this.userService.retrieveUser(id);
+
+        return res.status(200).json(foundUser);
+
+    }
 }

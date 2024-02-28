@@ -1,4 +1,4 @@
-import { sessionCreateSchema } from "./session.schema";
+import { sessionCreateSchema, sessionReturnSchema } from "./session.schema";
 import {
     categorySchema,
     createCategorySchema
@@ -24,5 +24,6 @@ export {
     userSchema,
     userCreateSchema,
     userReturnSchema,
-    sessionCreateSchema
+    sessionCreateSchema,
+    sessionReturnSchema
 };

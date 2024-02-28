@@ -3,12 +3,12 @@ import { CreateTask, UpdateTask, Task, TaskWithCategory } from "../interfaces";
 
 export class TaskService {
 
-    public create = async ({userId, ...payload}: CreateTask): Promise<Task> => {
+    public create = async (payload: CreateTask, userId: number): Promise<Task> => {
 
         const newTask = await prisma.task.create({
             data: {
                 ...payload,
-                userId: userId
+                userId
             } 
         });
 

@@ -7,4 +7,4 @@ export const sessionRouter = Router();
 
 const controller = new SessionController();
 
-sessionRouter.post("/", ensure.validBody(sessionCreateSchema), controller.login)
+sessionRouter.post("/", ensure.validAuthBody(sessionCreateSchema), controller.login)
