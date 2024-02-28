@@ -8,7 +8,6 @@ export class TaskController {
     public create = async (req: Request, res: Response): Promise<Response> => {
 
         const id = res.locals.sub;
-        console.log(id);
         const newTask = await this.taskService.create(req.body, id);
 
         return res.status(201).json(newTask);

@@ -1,12 +1,17 @@
 
 import { prisma } from "../database/prisma";
-import { CreateCategory } from "../interfaces";
+import { CreateCategory, ReturnCategory } from "../interfaces";
+import { categorySchema } from "../schemas";
 
 export class CategoryService {
 
-    public create = async (payload: CreateCategory) => {
+    public create = async (payload: CreateCategory, userId: number): Promise<ReturnCategory> => {
 
-        const newCategory = await prisma.category.create({ data: payload });
+        const newCategory = await prisma.category.create({
+             data: {
+                ...payload,
+                userId
+             }})
 
         return newCategory;
     };

@@ -7,7 +7,9 @@ export class CategoryController {
 
     public create = async (req:Request, res:Response): Promise<Response> => {
 
-        const newCategory = await this.categoryService.create(req.body);
+        const id = res.locals.sub;
+
+        const newCategory = await this.categoryService.create(req.body, id);
 
         return res.status(201).json(newCategory);
     }

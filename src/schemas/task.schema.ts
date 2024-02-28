@@ -13,7 +13,7 @@ const taskSchema = z.object({
 
 const taskWithCategorySchema = taskSchema.extend({category: categorySchema.nullable().optional()});
 
-const taskCreateSchema = taskSchema.omit({id: true, finished: true});
+const taskCreateSchema = taskSchema.omit({id: true, finished: true, userId: true});
 
 const taskUpdateSchema = taskSchema.omit({id: true}).partial();
 
