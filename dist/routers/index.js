@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.userRouter = exports.sessionRouter = exports.categoryRouter = exports.taskRouter = void 0;
+const tasks_router_1 = require("./tasks.router");
+Object.defineProperty(exports, "taskRouter", { enumerable: true, get: function () { return tasks_router_1.taskRouter; } });
+const category_router_1 = require("./category.router");
+Object.defineProperty(exports, "categoryRouter", { enumerable: true, get: function () { return category_router_1.categoryRouter; } });
+const session_router_1 = require("./session.router");
+Object.defineProperty(exports, "sessionRouter", { enumerable: true, get: function () { return session_router_1.sessionRouter; } });
+const users_router_1 = require("./users.router");
+Object.defineProperty(exports, "userRouter", { enumerable: true, get: function () { return users_router_1.userRouter; } });

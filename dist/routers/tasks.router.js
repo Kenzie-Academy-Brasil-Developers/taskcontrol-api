@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.taskRouter = void 0;
+const express_1 = require("express");
+const controllers_1 = require("../controllers");
+const ensure_middleware_1 = require("../middlewares/ensure.middleware");
+const task_schema_1 = require("../schemas/task.schema");
+const auth_middleware_1 = require("../middlewares/auth.middleware");
+exports.taskRouter = (0, express_1.Router)();
+const controller = new controllers_1.TaskController();
+exports.taskRouter.post("/", auth_middleware_1.auth.isAuthenticated, ensure_middleware_1.ensure.validBody(task_schema_1.taskCreateSchema), ensure_middleware_1.ensure.categoryIdExists, controller.create);
+exports.taskRouter.get("/", auth_middleware_1.auth.isAuthenticated, controller.read);
+exports.taskRouter.get("/:id", auth_middleware_1.auth.isAuthenticated, ensure_middleware_1.ensure.taskIdExists, controller.retrieve);
+exports.taskRouter.patch("/:id", auth_middleware_1.auth.isAuthenticated, ensure_middleware_1.ensure.taskIdExists, ensure_middleware_1.ensure.categoryIdExists, ensure_middleware_1.ensure.validBody(task_schema_1.taskUpdateSchema), controller.update);
+exports.taskRouter.delete("/:id", auth_middleware_1.auth.isAuthenticated, ensure_middleware_1.ensure.taskIdExists, controller.delete);
