@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AnyZodObject, ZodError } from "zod";
+import { AnyZodObject } from "zod";
 import { prisma } from "../database/prisma";
 import { AppError } from "../errors";
 
@@ -8,16 +8,6 @@ class EnsureMiddleware {
         req.body = schema.parse(req.body);
         return next();
     }
-
-    public validAuthBody  = (schema: AnyZodObject) => (req: Request, _: Response, next: NextFunction): void => {
-        try{
-            req.body = schema.parse(req.body);
-            return next();
-        }catch (error) {
-            throw new AppError("Invalid request body!", 409)
-        }
-    }
-
 
     public categoryIdExists = async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -75,18 +65,19 @@ class EnsureMiddleware {
 
         const { email } = req.body;
 
-        if(!email) {
+        if (!email) {
             return next();
         }
 
-        const foundUser = await prisma.user.findFirst({where: { email}});
+        const foundUser = await prisma.user.findFirst({ where: { email } });
 
-        if(foundUser){
+        if (foundUser) {
             throw new AppError("This email is already registered!", 409)
         }
 
         return next();
     }
 }
+
 export const ensure = new EnsureMiddleware();
 

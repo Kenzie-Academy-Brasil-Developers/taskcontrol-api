@@ -7,7 +7,7 @@ const categorySchema = z.object({
     userId: z.number().positive()
 })
 
-const createCategorySchema = categorySchema.omit({ id: true});
+const createCategorySchema = categorySchema.omit({ id: true, userId: true});
 
 
 export { categorySchema, createCategorySchema};

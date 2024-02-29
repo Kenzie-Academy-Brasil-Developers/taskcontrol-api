@@ -7,7 +7,7 @@ export class TaskController {
 
     public create = async (req: Request, res: Response): Promise<Response> => {
 
-        const id = res.locals.sub;
+        const id = Number(res.locals.sub);
         const newTask = await this.taskService.create(req.body, id);
 
         return res.status(201).json(newTask);
@@ -16,11 +16,12 @@ export class TaskController {
     public read = async (req: Request, res: Response): Promise<Response> => {
 
         const { category } = req.query;
+        const id = Number(res.locals.sub);
 
-        const allTasks = await this.taskService.read(category as string);
+
+        const allTasks = await this.taskService.read(id, category as string);
 
         
-        console.log(allTasks);
         return res.status(200).json(allTasks);
     };
 
@@ -36,17 +37,23 @@ export class TaskController {
 
     public update = async (req: Request, res: Response): Promise<Response> => {
 
-        const id = Number(req.params.id);
+        const userId = Number(res.locals.sub);
+        const taskId = Number(req.params.id);
+
         const body = req.body;
         
-        const updatedTask = await this.taskService.update(id, body)
+        const updatedTask = await this.taskService.update(userId, taskId, body)
 
         return res.status(200).json(updatedTask);
     };
 
     public delete = async (req: Request, res: Response): Promise<Response> => {
 
-        const deleteTask = await this.taskService.delete(Number(req.params.id));
+        const taskId = Number(req.params.id);
+        const userId = Number(res.locals.sub);
+        
+
+        const deleteTask = await this.taskService.delete(userId, taskId);
 
         return res.status(204).json(deleteTask);
     };

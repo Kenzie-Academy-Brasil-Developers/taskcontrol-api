@@ -1,7 +1,7 @@
 
 import { prisma } from "../database/prisma";
 import { CreateCategory, ReturnCategory } from "../interfaces";
-import { categorySchema } from "../schemas";
+import { AppError } from "../errors";
 
 export class CategoryService {
 
@@ -16,9 +16,15 @@ export class CategoryService {
         return newCategory;
     };
 
-    public deleteOne = async (categoryId: number) => {
+    public deleteOne = async (categoryId: number, userId: number) => {
 
-        const deleteCategory = await prisma.category.delete({ where: { id: categoryId } });
+        const currentCategory = await prisma.category.findFirst({where: {id: categoryId}});
+
+        if(!currentCategory || currentCategory.userId !== userId){
+            throw new AppError("Forbidden", 403)
+        }
+
+        const deleteCategory = await prisma.category.delete({ where: { id: categoryId, userId: userId } });
 
         return deleteCategory;
     };

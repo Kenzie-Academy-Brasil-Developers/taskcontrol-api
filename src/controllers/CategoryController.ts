@@ -7,7 +7,8 @@ export class CategoryController {
 
     public create = async (req:Request, res:Response): Promise<Response> => {
 
-        const id = res.locals.sub;
+        const id = Number(res.locals.sub);
+        console.log(id)
 
         const newCategory = await this.categoryService.create(req.body, id);
 
@@ -16,9 +17,11 @@ export class CategoryController {
 
     public delete = async (req: Request, res: Response): Promise<Response> => {
 
+    const userId = Number(res.locals.sub);
+
     const categoryId = Number(req.params.id);
 
-    const deleteCategory = await this.categoryService.deleteOne(categoryId);
+    const deleteCategory = await this.categoryService.deleteOne(categoryId, userId);
 
     return res.status(204).json(deleteCategory);
     }

@@ -1,5 +1,7 @@
 import { prisma } from "../database/prisma";
+import { AppError } from "../errors";
 import { CreateTask, UpdateTask, Task, TaskWithCategory } from "../interfaces";
+import { task } from "../tests/mocks/tasks.mocks";
 
 export class TaskService {
 
@@ -9,56 +11,81 @@ export class TaskService {
             data: {
                 ...payload,
                 userId
-            } 
+            }
         });
 
         return newTask;
     }
 
-    public read = async (search?: string): Promise<TaskWithCategory[] | null > => {
-
-        if(search){
+    public read = async (userId: number, search?: string): Promise<TaskWithCategory[] | null> => {
+        if (search) {
             const foundTasks = await prisma.task.findMany({
                 where: {
-                    ...(search && {
-                        category: { name: search }
-                    })
+                    userId: userId,
+                    category: {
+                        name: {
+                            contains: search
+                        },
+                        userId: userId,
+                    },
                 },
                 include: {
-                    category: true
-                }
-
+                    category: true,
+                },
             });
-            return foundTasks;   
+            return foundTasks;
         }
 
-        const tasks = await prisma.task.findMany({include: {category : true}});
-    
-        return tasks;
+        const tasksOwnedByUser = await prisma.task.findMany({
+            where: { userId: userId },
+            include: { category: true }
+        });
+
+        return tasksOwnedByUser;
     }
 
-    public retrieve = async (taskId: number): Promise<TaskWithCategory | null> => {
+    public retrieve = async (userId: number): Promise<TaskWithCategory | null> => {
 
-        const foundTask = await prisma.task.findFirst({ where: { id: taskId },
-        include: {
-            category: true
-        } });
+        const foundTask = await prisma.task.findFirst({
+            where: { id: userId },
+            include: {
+                category: true
+            }
+        });
 
         return foundTask;
     }
 
-    public update = async (taskId: number, data: UpdateTask): Promise<Task> => {
+    public update = async (userId: number, taskId: number, data: UpdateTask): Promise<Task> => {
 
-        const updateTask = await prisma.task.update({ where: { id: taskId },
-             data });
+        const currentTask = await prisma.task.findFirst({ where: { id: taskId } });
+
+        if (!currentTask || currentTask.userId !== userId) {
+            throw new AppError("Forbidden", 403)
+        }
+
+        const updateTask = await prisma.task.update({ where: { id: taskId }, data: { ...data } });
 
         return updateTask;
+
     }
 
-    public delete = async (taskId: number) => {
+    public delete = async (userId: number, taskId: number) => {
 
-      const deleteTask = await prisma.task.delete({ where: { id: taskId } });
+        const currentTask = await prisma.task.findFirst({ where: { id: taskId } });
+
+        if (!currentTask || currentTask.userId !== userId) {
+            throw new AppError("Forbidden", 403)
+        }
         
+
+        const deleteTask = await prisma.task.delete({
+            where: {
+                id: taskId,
+                userId: userId
+            }
+        });
+
         return deleteTask;
     }
 };

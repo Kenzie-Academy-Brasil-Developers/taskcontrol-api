@@ -20,7 +20,7 @@ export class SessionService {
 
         }
 
-        const secret = process.env.SECRET_KEY!;
+        const secret = process.env.JWT_SECRET!;
         const expiresIn = process.env.EXPIRES_IN!;
 
  

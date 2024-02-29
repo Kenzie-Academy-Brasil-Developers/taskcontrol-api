@@ -16,9 +16,9 @@ export class UserService {
         return userReturnSchema.parse(newUser);
     }
 
-    public retrieveUser = async (payload: number): Promise<TUserReturn> => {
+    public retrieveUser = async (userId: number): Promise<TUserReturn> => {
 
-        const foundUser = await prisma.user.findFirst({where: {id: payload}})
+        const foundUser = await prisma.user.findFirst({where: {id: userId }})
 
         return userReturnSchema.parse(foundUser);
     }

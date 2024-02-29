@@ -14,7 +14,7 @@ class AuthMiddleware {
 
         if (!token) throw new AppError("Token is required", 401);
 
-        const { sub } = verify(token, process.env.SECRET_KEY!) as JwtPayload;
+        const { sub } = verify(token, process.env.JWT_SECRET!) as JwtPayload;
 
         res.locals = { ...res.locals, sub };
         return next();

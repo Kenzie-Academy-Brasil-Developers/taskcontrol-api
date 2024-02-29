@@ -6,7 +6,6 @@ import { userReturnSchema } from "./user.schema";
 const sessionCreateSchema = userSchema.omit({id: true});
 
 
-
 const sessionReturnSchema = z.object({
     accessToken: z.string(),
     user: userReturnSchema
